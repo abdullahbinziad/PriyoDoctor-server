@@ -131,17 +131,19 @@ res.send(result);
   app.put("/doctors/:id", async (req, res) => {
     const id = req.params.id;
     const data = req.body;
-
+ console.log(data);
     const query = { _id: new ObjectId(id) };
     const options = { upsert: true };
-    const updatedToy = {
+    const updateDoctor = {
       $set: {
-        price: data.price,
-        quantityAvailable: data.quantityAvailable,
-        description: data.description,
+        image: data.image,
+        degree: data.degree,
+        email: data.email,
+        mobile: data.mobile,
+        specializations: data.specializations
       },
     };
-    const result = await doctorsCollection.updateOne(query, updatedToy, options);
+    const result = await doctorsCollection.updateOne(query, updateDoctor, options);
     res.send(result);
   });
 
