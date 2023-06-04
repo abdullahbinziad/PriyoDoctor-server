@@ -37,71 +37,28 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    const treatmentCollection = client.db("PriyoDoctorsDb").collection("treatments");
+
     const doctorsCollection = client.db("PriyoDoctorsDb").collection("doctors");
+    const slotsCollection = client.db("PriyoDoctorsDb").collection("slots");
     const usersCollection = client.db("PriyoDoctorsDb").collection("users");
     const appointmentsCollection = client.db("PriyoDoctorsDb").collection("appointments");
 
-    //For Treatments slot
-    //get a All Data
-    app.get("/treatmentsSlot", async (req, res) => {
   
 
-   const query ={};
-
-      const result = await treatmentCollection.find(query).sort({ [sortBy]: sortOrder }).toArray();
-
-      res.send(result);
-    });
-    //get a single Data
-    app.get("/treatmentsSlot/:id", async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: new ObjectId(id) };
-      const result = await treatmentCollection.findOne(query);
-      res.send(result);
-    });
-    //post single products
-    app.post("/treatmentsSlot/", async (req, res) => {
-      const data = req.body;
-
-      const result = await treatmentCollection.insertOne(data);
-      res.send(result);
-    });
-    //post Delete products
-    app.delete("/treatmentsSlot/:id", async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: new ObjectId(id) };
-
-      const result = await treatmentCollection.deleteOne(query);
-      res.send(result);
-    });
-
-    //update data
-    app.put("/treatmentsSlot/:id", async (req, res) => {
-      const id = req.params.id;
-      const data = req.body;
-
-      const query = { _id: new ObjectId(id) };
-      const options = { upsert: true };
-      const updatedToy = {
-        $set: {
-          price: data.price,
-          quantityAvailable: data.quantityAvailable,
-          description: data.description,
-        },
-      };
-      const result = await treatmentCollection.updateOne(query, updatedToy, options);
-      res.send(result);
-    });
-
-
-
+  
 
 //for doctors 
 
 
  app.get("/doctors", async (req, res) => {
-const result = await doctorsCollection.find({}).toArray();
+  const filter= req.query;
+console.log(filter);
+  let query= {}
+  if(filter && filter.speciality){
+    query= {speciality: filter.speciality} ;
+  }
+
+const result = await doctorsCollection.find(query).toArray();
 res.send(result);
      });
  //get a doctors single Data
@@ -111,14 +68,14 @@ res.send(result);
     const result = await doctorsCollection.findOne(query);
     res.send(result);
   });
-  //post single products
+  //post single doctors
   app.post("/doctors/", async (req, res) => {
     const data = req.body;
 
     const result = await doctorsCollection.insertOne(data);
     res.send(result);
   });
-  //post Delete products
+  //post Delete doctors
   app.delete("/doctors/:id", async (req, res) => {
     const id = req.params.id;
     const query = { _id: new ObjectId(id) };
@@ -148,6 +105,61 @@ res.send(result);
   });
 
 
+//for all slots
+app.get("/slots", async (req, res) => {
+//   const filter= req.query;
+// console.log(filter);
+  let query= {}
+  // if(filter && filter.speciality){
+  //   query= {speciality: filter.speciality} ;
+  // }
+
+const result = await slotsCollection.find(query).toArray();
+res.send(result);
+     });
+ //get a slots single Data
+ app.get("/slots/:id", async (req, res) => {
+    const id = req.params.id;
+    const query = { _id: new ObjectId(id) };
+    const result = await slotsCollection.findOne(query);
+    res.send(result);
+  });
+  //post single slots
+  app.post("/slots", async (req, res) => {
+    const data = req.body;
+console.log("slot data", data);
+    const result = await slotsCollection.insertOne(data);
+    res.send(result);
+  });
+  //post Delete slots
+  app.delete("/slots/:id", async (req, res) => {
+    const id = req.params.id;
+    const query = { _id: new ObjectId(id) };
+
+    const result = await slotsCollection.deleteOne(query);
+    res.send(result);
+  });
+
+  //update data
+  app.put("/slots/:id", async (req, res) => {
+    const id = req.params.id;
+    const data = req.body;
+ console.log(data);
+    const query = { _id: new ObjectId(id) };
+    const options = { upsert: true };
+    const updateDoctor = {
+      $set: {
+        image: data.image,
+        degree: data.degree,
+        email: data.email,
+        mobile: data.mobile,
+        specializations: data.specializations
+      },
+    };
+    const result = await slotsCollection.updateOne(query, updateDoctor, options);
+    res.send(result);
+  });
+
 
 
 
@@ -168,14 +180,14 @@ res.send(result);
     const result = await usersCollection.findOne(query);
     res.send(result);
   });
-  //post single products
+  //post single doctors
   app.post("/users/", async (req, res) => {
     const data = req.body;
 
     const result = await usersCollection.insertOne(data);
     res.send(result);
   });
-  //post Delete products
+  //post Delete doctors
   app.delete("/users/:id", async (req, res) => {
     const id = req.params.id;
     const query = { _id: new ObjectId(id) };
@@ -223,14 +235,14 @@ res.send(result);
     const result = await appointmentsCollection.findOne(query);
     res.send(result);
   });
-  //post single products
+  //post single doctors
   app.post("/appointments/", async (req, res) => {
     const data = req.body;
 
     const result = await appointmentsCollection.insertOne(data);
     res.send(result);
   });
-  //post Delete products
+  //post Delete doctors
   app.delete("/appointments/:id", async (req, res) => {
     const id = req.params.id;
     const query = { _id: new ObjectId(id) };
