@@ -107,15 +107,22 @@ res.send(result);
 
 //for all slots
 app.get("/slots", async (req, res) => {
-//   const filter= req.query;
-// console.log(filter);
-  let query= {}
-  // if(filter && filter.speciality){
-  //   query= {speciality: filter.speciality} ;
-  // }
+  const filter= req.query;
+  let query ={}
 
-const result = await slotsCollection.find(query).toArray();
-res.send(result);
+  if(filter && filter.speciality && filter.date){
+    query=  {$and:[{ speciality: { $eq: filter.speciality } },{ date: { $eq: filter.date } }]}
+  }
+console.log(filter);
+ 
+    const result = await slotsCollection.find(query).toArray();
+    res.send(result)
+ 
+ 
+ 
+
+
+
      });
  //get a slots single Data
  app.get("/slots/:id", async (req, res) => {
@@ -169,7 +176,7 @@ console.log("slot data", data);
 
     const query ={};
  
-       const result = await treatmentCollection.find(query).toArray();
+       const result = await usersCollection.find(query).toArray();
  
        res.send(result);
      });
@@ -223,7 +230,7 @@ console.log("slot data", data);
 
     const query ={};
  
-       const result = await treatmentCollection.find(query).toArray();
+       const result = await appointmentsCollection.find(query).toArray();
  
        res.send(result);
      });
